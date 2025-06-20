@@ -69,18 +69,6 @@ export function uploadImage({ file }) {
     })
 }
 
-export const fetchPromise = () => {
-    return fetch(postsHost, {
-        method: 'GET',
-    })
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            return data.posts
-        })
-}
-
 export const fetchPost = (description, imageUrl, token) => {
     return fetch(postsHost, {
         method: 'POST',
@@ -111,4 +99,69 @@ export const fetchPost = (description, imageUrl, token) => {
             console.log(data)
             return data
         })
+}
+
+export const fetchUser = ( {userId, token}) => {
+    return fetch(postsHost + `/user-posts/${userId}`, {
+        method: 'GET',
+        headers: {
+            Authorization: token,
+        },
+    })
+        .then((response) => {
+            if (response.status === 401) {
+                throw new Error('Нет авторизации')
+            }
+
+            return response.json()
+        })
+        .then((data) => {
+            return data.posts
+        })
+}
+
+export function addLikePost({ token, postId }) {
+    return fetch(postsHost + `/${postId}/like`, {
+        method: 'POST',
+        headers: {
+            Authorization: token,
+        },
+    }).then((response) => {
+        if (response.status === 201) {
+            return response.json()
+        } else {
+            if (response.status === 401) {
+                throw new Error(
+                    'Чтобы поставить лайк, необходимо авторизоваться',
+                )
+            }
+
+            throw new Error(
+                'При выполнении операции произошла ошибка',
+            )
+        }
+    })
+}
+
+export function disLikePost({ token, postId }) {
+    return fetch(postsHost + `/${postId}/dislike`, {
+        method: 'POST',
+        headers: {
+            Authorization: token,
+        },
+    }).then((response) => {
+        if (response.status === 201) {
+            return response.json()
+        } else {
+            if (response.status === 401) {
+                throw new Error(
+                    'Чтобы поставить лайк, необходимо авторизоваться',
+                )
+            }
+
+            throw new Error(
+                'При выполнении операции произошла ошибка',
+            )
+        }
+    })
 }

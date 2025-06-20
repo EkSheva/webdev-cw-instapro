@@ -1,6 +1,7 @@
-import { fetchPost, getPosts } from './api.js'
+import { fetchPost, fetchUser, getPosts } from './api.js'
 import { renderAddPostPageComponent } from './components/add-post-page-component.js'
 import { renderAuthPageComponent } from './components/auth-page-component.js'
+import { renderUserPostsPageComponent } from './components/renderUserPostsPageComponent.js'
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
@@ -71,73 +72,85 @@ export const goToPage = (newPage, data) => {
         }
 
         if (newPage === USER_POSTS_PAGE) {
+            page = LOADING_PAGE
+            renderApp()
             // @@TODO: реализовать получение постов юзера из API
-            console.log('Открываю страницу пользователя: ', data.userId)
-            page = USER_POSTS_PAGE
-            posts = []
-            return renderApp()
+        
+            return fetchUser({ token: getToken(), userId: data.userId })
+                .then((newPosts) => {
+                    page = USER_POSTS_PAGE
+                    posts = newPosts.posts
+                    renderApp()
+                })
+                .catch((error) => {
+                    console.error(error)
+                    goToPage(POSTS_PAGE)
+                })
         }
-
         page = newPage
         renderApp()
 
         return
     }
 
-    throw new Error('страницы не существует')
-}
-
-const renderApp = () => {
-    const appEl = document.getElementById('app')
-    if (page === LOADING_PAGE) {
-        return renderLoadingPageComponent({
-            appEl,
-            user,
-            goToPage,
-        })
+        throw new Error('страницы не существует')
     }
 
-    if (page === AUTH_PAGE) {
-        return renderAuthPageComponent({
-            appEl,
-            setUser: (newUser) => {
-                user = newUser
-                saveUserToLocalStorage(user)
-                goToPage(POSTS_PAGE)
-            },
-            user,
-            goToPage,
-        })
+    const renderApp = () => {
+        const appEl = document.getElementById('app')
+        if (page === LOADING_PAGE) {
+            return renderLoadingPageComponent({
+                appEl,
+                user,
+                goToPage,
+            })
+        }
+
+        if (page === AUTH_PAGE) {
+            return renderAuthPageComponent({
+                appEl,
+                setUser: (newUser) => {
+                    user = newUser
+                    saveUserToLocalStorage(user)
+                    goToPage(POSTS_PAGE)
+                },
+                user,
+                goToPage,
+            })
+        }
+
+        if (page === ADD_POSTS_PAGE) {
+            return renderAddPostPageComponent({
+                appEl,
+                onAddPostClick({ description, imageUrl }) {
+                    const token = getToken()
+                    fetchPost(description, imageUrl, token)
+                        .then(() => {
+                            goToPage(POSTS_PAGE)
+                        })
+                        .catch((error) => {
+                            console.error('Ошибка при добавлении поста:', error)
+                            alert(error.message)
+                        })
+                },
+            })
+        }
+
+        if (page === POSTS_PAGE) {
+            return renderPostsPageComponent({
+                appEl,
+            })
+        }
+
+        if (page === USER_POSTS_PAGE) {
+            // @TODO: реализовать страницу с фотографиями отдельного пользвателя
+            console.log("Открываю страницу пользователя: ", data.userId);
+            return renderUserPostsPageComponent({
+                appEl: appEl,
+                posts: posts,
+                userId: data.userId,
+            });
+        }
     }
 
-    if (page === ADD_POSTS_PAGE) {
-        return renderAddPostPageComponent({
-            appEl,
-            onAddPostClick({ description, imageUrl }) {
-                const token = getToken()
-                fetchPost(description, imageUrl, token)
-                    .then(() => {
-                        goToPage(POSTS_PAGE)
-                    })
-                    .catch((error) => {
-                        console.error('Ошибка при добавлении поста:', error)
-                        alert(error.message)
-                    })
-            },
-        })
-    }
-
-    if (page === POSTS_PAGE) {
-        return renderPostsPageComponent({
-            appEl,
-        })
-    }
-
-    if (page === USER_POSTS_PAGE) {
-        // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-        appEl.innerHTML = 'Здесь будет страница фотографий пользователя'
-        return
-    }
-}
-
-goToPage(POSTS_PAGE)
+    goToPage(POSTS_PAGE)
