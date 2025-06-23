@@ -4,7 +4,8 @@
   "description": "MVP социальной сети для обмена фотографиями",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --mode development --whatch",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
@@ -18,10 +19,13 @@
   },
   "homepage": "https://github.com/EkSheva/webdev-cw-instapro#readme",
   "dependencies": {
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.1.0",
+    "save": "^2.9.0"
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.0"
+    "eslint-plugin-prettier": "^5.5.0",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }

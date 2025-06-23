@@ -1,7 +1,7 @@
-import { fetchPost, fetchUser, getPosts } from './api.js'
-import { renderAddPostPageComponent } from './components/add-post-page-component.js'
-import { renderAuthPageComponent } from './components/auth-page-component.js'
-import { renderUserPostsPageComponent } from './components/renderUserPostsPageComponent.js'
+import { fetchPost, fetchUser, getPosts } from './api'
+import { renderAddPostPageComponent } from './components/add-post-page-component'
+import { renderAuthPageComponent } from './components/auth-page-component'
+import { renderUserPostsPageComponent } from './components/renderUserPostsPageComponent'
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
