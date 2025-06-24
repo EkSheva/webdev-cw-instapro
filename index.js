@@ -1,7 +1,6 @@
 import { fetchPost, fetchUser, getPosts } from './api'
 import { renderAddPostPageComponent } from './components/add-post-page-component'
 import { renderAuthPageComponent } from './components/auth-page-component'
-import { renderUserPostsPageComponent } from './components/renderUserPostsPageComponent'
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
@@ -25,7 +24,7 @@ export const updatePosts = (newPosts) => {
     posts = newPosts
 }
 
-const getToken = () => {
+export const getToken = () => {
     const token = user ? `Bearer ${user.token}` : undefined
     return token
 }
@@ -77,10 +76,10 @@ export const goToPage = (newPage, data) => {
             // @@TODO: реализовать получение постов юзера из API
         
             return fetchUser({ token: getToken(), userId: data.userId })
-                .then((newPosts) => {
+                .then((userPosts) => {
                     page = USER_POSTS_PAGE
-                    posts = newPosts.posts
-                    renderApp()
+                    posts = userPosts
+                    renderApp(posts)
                 })
                 .catch((error) => {
                     console.error(error)
@@ -144,8 +143,7 @@ export const goToPage = (newPage, data) => {
 
         if (page === USER_POSTS_PAGE) {
             // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-            console.log("Открываю страницу пользователя: ", data.userId);
-            return renderUserPostsPageComponent({
+            return renderPostsPageComponent({
                 appEl: appEl,
                 posts: posts,
                 userId: data.userId,

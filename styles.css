@@ -1,5 +1,6 @@
 .page-container {
   padding: 0 20px;
+  background: linear-gradient(to left, white, rgb(157, 157, 228) 25%, rgb(151, 151, 244) 75%, white 100%)
 }
 
 .page-header {
@@ -34,8 +35,17 @@
 }
 
 .logout-button {
-  width: 130px;
-  text-align: right;
+  margin-top: 24px;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: hwb(188 2% 3% / 0.402);
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+}
+.logout-button:hover {
+    opacity: 0.9;
+    color: white;
 }
 
 .posts {
@@ -195,4 +205,40 @@
   box-sizing: border-box;
   width: 100%;
   text-align: center;
+}
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(30deg);
+    }
+    75% {
+        transform: rotate(-30deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.-loading-like {
+    animation: rotating 2s linear infinite;
+}
+
+.-active{
+background-image: url(./assets/images/like-active.svg);
+background-repeat: no-repeat;
+background-position: center;
+width: 22px;
+height: 22px;
+margin-right: 10px;
+}
+.-not-active{
+
+background-image: url(./assets/images/like-not-active.svg);
+background-repeat: no-repeat;
+background-position: center;
+width: 22px;
+height: 22px;
+margin-right: 10px;
 }

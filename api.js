@@ -101,7 +101,7 @@ export const fetchPost = (description, imageUrl, token) => {
         })
 }
 
-export const fetchUser = ( {userId, token}) => {
+export const fetchUser = ({ userId, token }) => {
     return fetch(postsHost + `/user-posts/${userId}`, {
         method: 'GET',
         headers: {
@@ -135,10 +135,6 @@ export function addLikePost({ token, postId }) {
                     'Чтобы поставить лайк, необходимо авторизоваться',
                 )
             }
-
-            throw new Error(
-                'При выполнении операции произошла ошибка',
-            )
         }
     })
 }
@@ -158,10 +154,6 @@ export function disLikePost({ token, postId }) {
                     'Чтобы поставить лайк, необходимо авторизоваться',
                 )
             }
-
-            throw new Error(
-                'При выполнении операции произошла ошибка',
-            )
         }
     })
 }
